@@ -1,0 +1,8 @@
+animal
+buildings
+food
+information
+manyperson
+noPeople
+oneperson
+selfie
