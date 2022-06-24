@@ -14,6 +14,134 @@
  limitations under the License.
 -->
 
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+
+<!--    <com.example.android.tflitecamerademo.AutoFitTextureView-->
+<!--        android:id="@+id/texture"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_weight="1" />-->
+<!--    &lt;!&ndash;        android:layout_alignParentStart="true"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_alignParentTop="true"&ndash;&gt;-->
+
+<!--    &lt;!&ndash;    <com.example.android.tflitecamerademo.AccelPlot&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:id="@+id/accelPlot"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_height="600dp" />&ndash;&gt;-->
+
+<!--    &lt;!&ndash;    <SeekBar&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:id="@+id/seekBar1"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:layout_above="@id/control"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:max="100"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:progress="0"&ndash;&gt;-->
+<!--    &lt;!&ndash;        android:padding="10dp"&ndash;&gt;-->
+<!--    &lt;!&ndash;        />&ndash;&gt;-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/control"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:background="@color/control_background">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="140dp"-->
+<!--            android:layout_height="120dp"-->
+<!--            android:layout_gravity="center_vertical|left"-->
+<!--            android:orientation="vertical">-->
+
+<!--            &lt;!&ndash;                    <TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:id="@+id/maxbrightness"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_width="140dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_height="30dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                         />&ndash;&gt;-->
+
+
+<!--            &lt;!&ndash;                    <TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:id="@+id/brightness"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_width="100dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_height="30dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        />&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:id="@+id/XFPS"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_width="100dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        android:layout_height="30dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                        />&ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/I"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/X"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/Y"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                />-->
+<!--            <TextView-->
+<!--                android:id="@+id/Z"-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+<!--        <Button-->
+<!--            android:id="@+id/picture"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="@string/picture" />-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="140dp"-->
+<!--            android:layout_height="120dp"-->
+<!--            android:layout_gravity="center_vertical|right"-->
+<!--            android:orientation="vertical">-->
+<!--            <Spinner-->
+<!--                android:id="@+id/spinnerFps"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_height="40dp"-->
+<!--                ></Spinner>-->
+<!--            &lt;!&ndash;            <Spinner&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:id="@+id/spinnerBright"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="40dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                ></Spinner>&ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/XFPS"-->
+<!--                android:layout_width="140dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                />-->
+<!--            <Button-->
+<!--                android:id="@+id/start"-->
+<!--                android:layout_width="140dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="start" />-->
+<!--            <Button-->
+<!--                android:id="@+id/end"-->
+<!--                android:layout_width="140dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="end" />-->
+
+<!--        </LinearLayout>-->
+
+
+
+<!--    </LinearLayout>-->
+
+
+<!--</RelativeLayout>-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -55,14 +183,16 @@
             android:layout_height="120dp"
             android:layout_gravity="center_vertical|left"
             android:orientation="vertical">
-
-            <!--                    <TextView-->
-            <!--                        android:id="@+id/maxbrightness"-->
-            <!--                        android:layout_width="140dp"-->
-            <!--                        android:layout_height="30dp"-->
-            <!--                         />-->
-
-
+            <TextView
+                android:id="@+id/maxbrightness"
+                android:layout_width="140dp"
+                android:layout_height="30dp"
+                />
+            <TextView
+                android:id="@+id/I"
+                android:layout_width="140dp"
+                android:layout_height="30dp"
+                />
             <!--                    <TextView-->
             <!--                        android:id="@+id/brightness"-->
             <!--                        android:layout_width="100dp"-->
@@ -73,27 +203,27 @@
             <!--                        android:layout_width="100dp"-->
             <!--                        android:layout_height="30dp"-->
             <!--                        />-->
-            <TextView
-                android:id="@+id/I"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                />
-            <TextView
-                android:id="@+id/X"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                />
-            <TextView
-                android:id="@+id/Y"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                />
-            <TextView
-                android:id="@+id/Z"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                />
         </LinearLayout>
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/I"-->
+        <!--                        android:layout_width="100dp"-->
+        <!--                        android:layout_height="30dp"-->
+        <!--                        />-->
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/X"-->
+        <!--                        android:layout_width="100dp"-->
+        <!--                        android:layout_height="30dp"-->
+        <!--                        />-->
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/Y"-->
+        <!--                        android:layout_width="100dp"-->
+        <!--                        android:layout_height="30dp"-->
+        <!--                        />-->
+        <!--                    <TextView-->
+        <!--                        android:id="@+id/Z"-->
+        <!--                        android:layout_width="100dp"-->
+        <!--                        android:layout_height="30dp"-->
+        <!--                        />-->
         <Button
             android:id="@+id/picture"
             android:layout_width="wrap_content"
@@ -102,7 +232,7 @@
             android:text="@string/picture" />
         <LinearLayout
             android:layout_width="140dp"
-            android:layout_height="120dp"
+            android:layout_height="150dp"
             android:layout_gravity="center_vertical|right"
             android:orientation="vertical">
             <Spinner
@@ -111,28 +241,33 @@
                 android:layout_gravity="center"
                 android:layout_height="40dp"
                 ></Spinner>
-            <!--            <Spinner-->
-            <!--                android:id="@+id/spinnerBright"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="40dp"-->
-            <!--                ></Spinner>-->
             <TextView
                 android:id="@+id/XFPS"
                 android:layout_width="140dp"
                 android:layout_height="30dp"
                 />
-            <Button
-                android:id="@+id/start"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:text="start" />
-            <Button
-                android:id="@+id/end"
-                android:layout_width="140dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:text="end" />
+            <!--            <Spinner-->
+            <!--                android:id="@+id/spinnerBright"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                ></Spinner>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/XFPS"-->
+            <!--                android:layout_width="140dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                />-->
+            <!--            <Button-->
+            <!--                android:id="@+id/start"-->
+            <!--                android:layout_width="140dp"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:text="start" />-->
+            <!--            <Button-->
+            <!--                android:id="@+id/end"-->
+            <!--                android:layout_width="140dp"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:text="end" />-->
 
         </LinearLayout>
 

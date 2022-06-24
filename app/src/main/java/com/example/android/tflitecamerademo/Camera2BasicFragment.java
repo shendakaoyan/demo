@@ -287,6 +287,7 @@ public class Camera2BasicFragment extends Fragment
   private  int xFps = 0;
   //  private int id = 0;
   private int totalCnt = 0;
+  private int brightCnt = 0;
   private boolean isHold = true;
   private  boolean firstIn = true;
   private boolean isChanged = false;
@@ -345,6 +346,7 @@ public class Camera2BasicFragment extends Fragment
   private int mSensorOrientation;
 
   private long lastTime;
+  private long lastTime2;
   private long currentTime;
 
   /** A {@link CameraCaptureSession.CaptureCallback} that handles events related to capture. */
@@ -701,6 +703,7 @@ public class Camera2BasicFragment extends Fragment
     Sensor mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     lastTime = System.currentTimeMillis();
+    lastTime2 = lastTime;
     startBackgroundThread();
     updateActiveModel();
 
@@ -1276,11 +1279,11 @@ public class Camera2BasicFragment extends Fragment
       lastFps = 30;
 
     }else{
-      setFps(20);
-      lastFps = 20;
+      setFps(25);
+      lastFps = 25;
     }
     xFps = lastFps;
-//    t2.setText("fps"+lastFps);
+    t2.setText("fps"+lastFps);
   }
 
   @Override
@@ -1320,7 +1323,7 @@ public class Camera2BasicFragment extends Fragment
                   Log.e(TAG, "Failed to set up config to capture Camera", e);
                 }
                 lastFps = xFps;
-//                t2.setText("fps" + lastFps);
+                t2.setText("fps" + lastFps);
               }
               totalCnt += 1;
               stablecnt = 0;
@@ -1328,7 +1331,7 @@ public class Camera2BasicFragment extends Fragment
               max = 0;
             } else {
               stablecnt += 1;
-              if (stablecnt == 10) {                //稳定超过0.5秒进行一次判断，并根据结果调整预览界面的帧率，且只有stablecnt为2的时候才执行一次类型识别
+              if (stablecnt == 10) {                //稳定超过0.5秒进行一次判断，并根据结果调整预览界面的帧率，且只有stablecnt为10的时候才执行一次类型识别
                 synchronized (lock) {
                   runClassifier = true;
                 }
@@ -1376,32 +1379,31 @@ public class Camera2BasicFragment extends Fragment
           }
         }
 
-
-        if (isHold && totalCnt % 20 == 0) {
-          int deltaL = (int) (b * max2 * x_luminance);
-          int temp_luminance = x_luminance - deltaL;
-          if (temp_luminance > min_brightness) {
-            x_luminance = temp_luminance;
+      }
+      firstIn = false;
+      if (isHold&&currentTime - lastTime2 > 1000) {
+        lastTime2 = currentTime;
+        brightCnt++;
+        int deltaL = (int) (b * max2 * x_luminance);
+        int temp_luminance = x_luminance - deltaL;
+        if (temp_luminance > min_brightness) {
+          x_luminance = temp_luminance;
 //              setBrightness(getActivity(), x_luminance);
 //          WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
 //          lp.screenBrightness = (float) x_luminance * (1f / 255f);
 //          getActivity().getWindow().setAttributes(lp);
-          } else {
+        } else {
 //              setBrightness(getActivity(), min_brightness);
 //          WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
 //          lp.screenBrightness = (float) min_brightness * (1f / 255f);
 //          getActivity().getWindow().setAttributes(lp);
-            isHold = false;
-            x_luminance = min_brightness;
-          }
-
-          stringBuilderBright.append( totalCnt + "  bright  " + x_luminance + "  I  " + df.format(max2)+'\n');
-          max2 = 0;
+          isHold = false;
+          x_luminance = min_brightness;
         }
 
-
+        stringBuilderBright.append( brightCnt + "  bright  " + x_luminance + "  I  " + df.format(max2)+'\n');
+        max2 = 0;
       }
-      firstIn = false;
 
     }
   }
