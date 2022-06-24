@@ -147,10 +147,10 @@
     android:layout_height="match_parent">
 
     <com.example.android.tflitecamerademo.AutoFitTextureView
-        android:id="@+id/texture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+            android:id="@+id/texture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     <!--        android:layout_alignParentStart="true"-->
     <!--        android:layout_alignParentTop="true"-->
 
@@ -203,6 +203,28 @@
             <!--                        android:layout_width="100dp"-->
             <!--                        android:layout_height="30dp"-->
             <!--                        />-->
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/I"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                />
+            <TextView
+                android:id="@+id/X"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                />
+            <TextView
+                android:id="@+id/Y"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                />
+            <TextView
+                android:id="@+id/Z"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                />
+
         </LinearLayout>
         <!--                    <TextView-->
         <!--                        android:id="@+id/I"-->
@@ -242,6 +264,12 @@
                 android:layout_height="40dp"
                 ></Spinner>
             <TextView
+            <!--            <Spinner-->
+            <!--                android:id="@+id/spinnerBright"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                ></Spinner>-->
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/XFPS"
                 android:layout_width="140dp"
                 android:layout_height="30dp"

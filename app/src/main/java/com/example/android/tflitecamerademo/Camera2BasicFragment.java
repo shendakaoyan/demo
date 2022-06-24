@@ -27,7 +27,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -53,11 +52,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Process;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.text.SpannableString;
+import android.support.v13.app.FragmentCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.util.Range;
@@ -72,22 +72,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v13.app.FragmentCompat;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
@@ -100,10 +91,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.io.FileInputStream;
-import java.text.DecimalFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /** Basic fragments for the Camera. */
 public class Camera2BasicFragment extends Fragment
@@ -295,8 +282,8 @@ public class Camera2BasicFragment extends Fragment
   private  int filename = 0;
   StringBuilder stringBuilder = new StringBuilder();
   StringBuilder stringBuilderBright = new StringBuilder();
-  TextView t1;
-  TextView t2;
+  AppCompatTextView t1;
+  AppCompatTextView t2;
 
   /**
    * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
@@ -560,9 +547,9 @@ public class Camera2BasicFragment extends Fragment
     stringBuilder.append(message1);
     textViewMax = (TextView)view.findViewById(R.id.maxbrightness);
     textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-    t1 = (TextView)view.findViewById(R.id.I);
+    t1 = (AppCompatTextView)view.findViewById(R.id.I);
 
-    t2 = (TextView)view.findViewById(R.id.XFPS);
+    t2 = (AppCompatTextView)view.findViewById(R.id.XFPS);
 
     Button b1 = (Button) view.findViewById(R.id.picture);
     b1.setOnClickListener(view12 -> takePicture()
@@ -1283,7 +1270,15 @@ public class Camera2BasicFragment extends Fragment
       lastFps = 25;
     }
     xFps = lastFps;
+
     t2.setText("fps"+lastFps);
+//    Log.d(TAG, "------------>>>>>>>>>> - classifyFrame current thread is = " + Thread.currentThread() + ", is Main = "
+//            + (Looper.myLooper() == Looper.getMainLooper()));
+    getActivity().runOnUiThread(() -> {
+      Log.d(TAG, "------------>>>>>>>>>> - is Main = "
+              + (Looper.myLooper() == Looper.getMainLooper()));
+      t2.setText("fps"+lastFps);
+    });
   }
 
   @Override
@@ -1295,6 +1290,7 @@ public class Camera2BasicFragment extends Fragment
       float Y = event.values[1];
       float Z = event.values[2];
       double i = Math.sqrt(X * X + Y * Y + Z * Z);
+      Log.d(TAG, "========>>>>>>>>>>>>>>>>>>>>   i = " + i);
       if (i > max) {
         max = i;
       }
@@ -1362,7 +1358,7 @@ public class Camera2BasicFragment extends Fragment
                 Log.e(TAG, "Failed to set up config to capture Camera", e);
               }
               lastFps = xFps;
-//              t2.setText("fps"+lastFps);
+              t2.setText("fps"+lastFps);
             }
             stablecnt = 0;
             phonestable = false;
@@ -1401,8 +1397,12 @@ public class Camera2BasicFragment extends Fragment
           x_luminance = min_brightness;
         }
 
+
         stringBuilderBright.append( brightCnt + "  bright  " + x_luminance + "  I  " + df.format(max2)+'\n');
         max2 = 0;
+
+        Log.d(TAG, "--------------------- > xFps = " + xFps);
+
       }
 
     }

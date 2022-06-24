@@ -60,7 +60,7 @@
                         android:layout_width="140dp"
                         android:layout_height="30dp"
                          />
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/I"
                         android:layout_width="140dp"
                         android:layout_height="30dp"
@@ -113,7 +113,7 @@
                 android:layout_gravity="center"
                 android:layout_height="40dp"
                 ></Spinner>
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/XFPS"
                 android:layout_width="140dp"
                 android:layout_height="30dp"
