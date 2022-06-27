@@ -92,11 +92,15 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-/** Basic fragments for the Camera. */
+/**
+ * Basic fragments for the Camera.
+ */
 public class Camera2BasicFragment extends Fragment
-        implements  FragmentCompat.OnRequestPermissionsResultCallback, SensorEventListener {
+        implements FragmentCompat.OnRequestPermissionsResultCallback, SensorEventListener {
 
-  /** Tag for the {@link Log}. */
+  /**
+   * Tag for the {@link Log}.
+   */
   private static final String TAG = "TfLiteCameraDemo";
 
   private static final String FRAGMENT_DIALOG = "dialog";
@@ -115,11 +119,9 @@ public class Camera2BasicFragment extends Fragment
 
   private final Object lock = new Object();
   private boolean runClassifier = false;
-  private boolean phonestable = false;
+  private boolean mPhoneStable = false;
   private boolean checkedPermissions = false;
   private ImageClassifier classifier;
-
-//  private long time = 0;
 
   /**
    * Camera state: Showing camera preview.
@@ -145,10 +147,14 @@ public class Camera2BasicFragment extends Fragment
    * Camera state: Picture was taken.
    */
   private static final int STATE_PICTURE_TAKEN = 4;
-  /** Max preview width that is guaranteed by Camera2 API */
+  /**
+   * Max preview width that is guaranteed by Camera2 API
+   */
   private static final int MAX_PREVIEW_WIDTH = 1920;
 
-  /** Max preview height that is guaranteed by Camera2 API */
+  /**
+   * Max preview height that is guaranteed by Camera2 API
+   */
   private static final int MAX_PREVIEW_HEIGHT = 1080;
 
   /**
@@ -174,39 +180,50 @@ public class Camera2BasicFragment extends Fragment
             }
 
             @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture texture) {}
+            public void onSurfaceTextureUpdated(SurfaceTexture texture) {
+            }
           };
 
 
-
-  /** ID of the current {@link CameraDevice}. */
+  /**
+   * ID of the current {@link CameraDevice}.
+   */
   private String cameraId = String.valueOf(0);
 
-  /** An {@link AutoFitTextureView} for camera preview. */
+  /**
+   * An {@link AutoFitTextureView} for camera preview.
+   */
   private AutoFitTextureView textureView;
 
-  /** A {@link CameraCaptureSession } for camera preview. */
+  /**
+   * A {@link CameraCaptureSession } for camera preview.
+   */
   private CameraCaptureSession captureSession;
 
-  /** A reference to the opened {@link CameraDevice}. */
+  /**
+   * A reference to the opened {@link CameraDevice}.
+   */
   private CameraDevice cameraDevice;
 
-  /** The {@link Size} of camera preview. */
+  /**
+   * The {@link Size} of camera preview.
+   */
   private Size previewSize;
 
   private int max_Brightness;
 
-  private  TextView textViewMax;
+  private TextView textViewMax;
   //  private  AccelPlot ref;
   private SurfaceTexture texture;
   Surface surface;
-  Range<Integer> fps[];
   Range<Integer>[] FPS;
 
   //  String message = new String();
   DecimalFormat df = new DecimalFormat("######0.000");
-  SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss SSS");
-  /** {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state. */
+  SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
+  /**
+   * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
+   */
   private final CameraDevice.StateCallback stateCallback =
           new CameraDevice.StateCallback() {
 
@@ -247,13 +264,19 @@ public class Camera2BasicFragment extends Fragment
 //
 //  int currentNumThreads = -1;
 
-  /** An additional thread for running tasks that shouldn't block the UI. */
+  /**
+   * An additional thread for running tasks that shouldn't block the UI.
+   */
   private HandlerThread backgroundThread;
 
-  /** A {@link Handler} for running tasks in the background. */
+  /**
+   * A {@link Handler} for running tasks in the background.
+   */
   private Handler backgroundHandler;
 
-  /** An {@link ImageReader} that handles image capture. */
+  /**
+   * An {@link ImageReader} that handles image capture.
+   */
   private ImageReader imageReader;
 
   /**
@@ -267,19 +290,18 @@ public class Camera2BasicFragment extends Fragment
   private double max2 = 0;
   private double a = 0.001;
   private double b = 0.001;
-  private  int stablecnt = 0;
+  private int stablecnt = 0;
   private int x_luminance;
-  private  int min_brightness;
-  private int lastFps = 30 ;
-  private  int xFps = 0;
+  private int min_brightness;
+  private int lastFps = 30;
+  private int xFps = 0;
   //  private int id = 0;
   private int totalCnt = 0;
-  private int brightCnt = 0;
   private boolean isHold = true;
-  private  boolean firstIn = true;
+  private boolean firstIn = true;
   private boolean isChanged = false;
-  private  List<Integer> list = new ArrayList<>();
-  private  int filename = 0;
+  private List<Integer> list = new ArrayList<>();
+  private int filename = 0;
   StringBuilder stringBuilder = new StringBuilder();
   StringBuilder stringBuilderBright = new StringBuilder();
   AppCompatTextView t1;
@@ -298,7 +320,7 @@ public class Camera2BasicFragment extends Fragment
 //             mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
 
       String str = sdf.format(new Date());
-      String message = "Take picture:  "+str+"\n";
+      String message = "Take picture:  " + str + "\n";
 //      saveFile(message,filename);
       stringBuilder.append(message);
       pictureFile = new File(getActivity().getExternalFilesDir(null), str + ".jpg");
@@ -307,10 +329,14 @@ public class Camera2BasicFragment extends Fragment
 
   };
 
-  /** {@link CaptureRequest.Builder} for the camera preview */
+  /**
+   * {@link CaptureRequest.Builder} for the camera preview
+   */
   private CaptureRequest.Builder previewRequestBuilder;
 
-  /** {@link CaptureRequest} generated by {@link #previewRequestBuilder} */
+  /**
+   * {@link CaptureRequest} generated by {@link #previewRequestBuilder}
+   */
   private CaptureRequest previewRequest;
 
   /**
@@ -319,7 +345,9 @@ public class Camera2BasicFragment extends Fragment
    * @see #captureCallback
    */
   private int mState = STATE_PREVIEW;
-  /** A {@link Semaphore} to prevent the app from exiting before closing the camera. */
+  /**
+   * A {@link Semaphore} to prevent the app from exiting before closing the camera.
+   */
   private Semaphore cameraOpenCloseLock = new Semaphore(1);
 
   /**
@@ -333,10 +361,11 @@ public class Camera2BasicFragment extends Fragment
   private int mSensorOrientation;
 
   private long lastTime;
-  private long lastTime2;
   private long currentTime;
 
-  /** A {@link CameraCaptureSession.CaptureCallback} that handles events related to capture. */
+  /**
+   * A {@link CameraCaptureSession.CaptureCallback} that handles events related to capture.
+   */
   private CameraCaptureSession.CaptureCallback captureCallback =
           new CameraCaptureSession.CaptureCallback() {
 
@@ -390,15 +419,15 @@ public class Camera2BasicFragment extends Fragment
 
             @Override
             public void onCaptureProgressed(@NonNull CameraCaptureSession session,
-                                            @NonNull CaptureRequest request,
-                                            @NonNull CaptureResult partialResult) {
+                    @NonNull CaptureRequest request,
+                    @NonNull CaptureResult partialResult) {
               process(partialResult);
             }
 
             @Override
             public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-                                           @NonNull CaptureRequest request,
-                                           @NonNull TotalCaptureResult result) {
+                    @NonNull CaptureRequest request,
+                    @NonNull TotalCaptureResult result) {
               process(result);
 //              SimpleDateFormat sdf=new SimpleDateFormat("HH:mm:ss SSS");
 //              String str=sdf.format(new Date());
@@ -485,15 +514,13 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
-
-
-
   public static Camera2BasicFragment newInstance() {
     return new Camera2BasicFragment();
   }
 
-  /** Layout the preview and buttons. */
+  /**
+   * Layout the preview and buttons.
+   */
   @Override
   public View onCreateView(
           LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -503,7 +530,6 @@ public class Camera2BasicFragment extends Fragment
 
   private void updateActiveModel() {
     // Get UI information before delegating to background
-
 
     backgroundHandler.post(
             () -> {
@@ -517,7 +543,7 @@ public class Camera2BasicFragment extends Fragment
               // Try to load model.
               try {
                 classifier = new ImageClassifierFloatMobileNet(getActivity());
-              }  catch (IOException e) {
+              } catch (IOException e) {
                 Log.d(TAG, "Failed to load", e);
                 classifier = null;
               }
@@ -530,10 +556,11 @@ public class Camera2BasicFragment extends Fragment
             });
   }
 
-  /** Connect the buttons to their event handler. */
+  /**
+   * Connect the buttons to their event handler.
+   */
   @Override
   public void onViewCreated(final View view, Bundle savedInstanceState) {
-
 
     list.add(1);
     list.add(2);
@@ -541,20 +568,20 @@ public class Camera2BasicFragment extends Fragment
     java.util.Collections.shuffle(list);
 
     String str = sdf.format(new Date());
-    String message1 = "openTime:  "+str+"   "+list;
+    String message1 = "openTime:  " + str + "   " + list;
 //    saveFile(message,filename);
 //    saveFile(list.toString(),filename);
     stringBuilder.append(message1);
-    textViewMax = (TextView)view.findViewById(R.id.maxbrightness);
+    textViewMax = (TextView) view.findViewById(R.id.maxbrightness);
     textureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-    t1 = (AppCompatTextView)view.findViewById(R.id.I);
+    t1 = (AppCompatTextView) view.findViewById(R.id.I);
 
-    t2 = (AppCompatTextView)view.findViewById(R.id.XFPS);
+    t2 = (AppCompatTextView) view.findViewById(R.id.XFPS);
 
     Button b1 = (Button) view.findViewById(R.id.picture);
     b1.setOnClickListener(view12 -> takePicture()
     );
-    Spinner spinnerFps = (Spinner)view.findViewById(R.id.spinnerFps);
+    Spinner spinnerFps = (Spinner) view.findViewById(R.id.spinnerFps);
     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
             R.array.a_array, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
@@ -562,105 +589,104 @@ public class Camera2BasicFragment extends Fragment
 // Apply the adapter to the spinner
     spinnerFps.setAdapter(adapter);
 
-
 //    为spinner绑定监听器，这里我们使用匿名内部类的方式实现监听器
     spinnerFps.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         String ps = adapter.getItem(position).toString();
-        saveFile(stringBuilder.toString(),"fps",filename);
-        saveFile(stringBuilderBright.toString(),"bright",filename);
-        stringBuilder.delete( 0, stringBuilder.length() );
-        stringBuilderBright.delete( 0, stringBuilder.length() );
+        saveFile(stringBuilder.toString(), "fps", filename);
+        saveFile(stringBuilderBright.toString(), "bright", filename);
+        stringBuilder.delete(0, stringBuilder.length());
+        stringBuilderBright.delete(0, stringBuilder.length());
         switch (ps) {
           case "scene1":
-            switch(list.get(0)){
+            switch (list.get(0)) {
               case 1:
-                a=0.08;
-                b=0.01;
+                a = 0.08;
+                b = 0.01;
                 filename = 1;
                 isChanged = true;
                 break;
               case 2:
-                a=0.20;
-                b=0.40;
+                a = 0.20;
+                b = 0.40;
                 filename = 2;
                 isChanged = true;
                 break;
               case 3:
-                a=0.001;
-                b=0.001;
+                a = 0.001;
+                b = 0.001;
                 filename = 3;
                 isChanged = false;
                 break;
 
-            };
+            }
+            ;
             totalCnt = 0;
             x_luminance = max_Brightness;
             setBrightness(getActivity(), x_luminance);
 //            textViewX.setText("亮度"+x_luminance);
             setFps(30);
-            lastFps = 30;
 //            textViewFPS.setText("帧率："+xFps);
-            isHold =true;
+            isHold = true;
             break;
           case "scene2":
-            switch(list.get(1)){
+            switch (list.get(1)) {
               case 1:
-                a=0.08;
-                b=0.01;
+                a = 0.08;
+                b = 0.01;
                 filename = 1;
                 isChanged = true;
                 break;
               case 2:
-                a=0.20;
-                b=0.40;
+                a = 0.20;
+                b = 0.40;
                 filename = 2;
                 isChanged = true;
                 break;
               case 3:
-                a=0.001;
-                b=0.001;
+                a = 0.001;
+                b = 0.001;
                 filename = 3;
                 isChanged = false;
                 break;
 
-            };
+            }
+            ;
             totalCnt = 0;
             x_luminance = max_Brightness;
             setBrightness(getActivity(), x_luminance);
             setFps(30);
-            lastFps = 30;
             isHold = true;
             break;
           case "scene3":
-            switch(list.get(2)){
+            switch (list.get(2)) {
               case 1:
-                a=0.08;
-                b=0.01;
+                a = 0.08;
+                b = 0.01;
                 filename = 1;
                 isChanged = true;
                 break;
               case 2:
-                a=0.20;
-                b=0.40;
+                a = 0.20;
+                b = 0.40;
                 filename = 2;
                 isChanged = true;
                 break;
               case 3:
-                a=0.001;
-                b=0.001;
+                a = 0.001;
+                b = 0.001;
                 filename = 3;
                 isChanged = false;
                 break;
 
-            };
+            }
+            ;
             totalCnt = 0;
             x_luminance = max_Brightness;
             setBrightness(getActivity(), x_luminance);
             setFps(30);
-            lastFps = 30;
             isHold = true;
             break;
           default:
@@ -670,27 +696,30 @@ public class Camera2BasicFragment extends Fragment
 
 
       }
+
       @Override
       public void onNothingSelected(AdapterView<?> parent) {
       }
     });
 
-    max_Brightness = getScreenBrightness(getActivity().getApplicationContext());;
+    max_Brightness = getScreenBrightness(getActivity().getApplicationContext());
+    ;
     textViewMax.setText("finaltest");
-    x_luminance =  max_Brightness;
-    min_brightness = (int)(max_Brightness * 0.7);
+    x_luminance = max_Brightness;
+    min_brightness = (int) (max_Brightness * 0.7);
   }
 
-  /** Load the model and labels. */
+  /**
+   * Load the model and labels.
+   */
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
 //    mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
-    mSensorManager =(SensorManager) getActivity().getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
+    mSensorManager = (SensorManager) getActivity().getApplicationContext().getSystemService(Context.SENSOR_SERVICE);
     Sensor mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
     lastTime = System.currentTimeMillis();
-    lastTime2 = lastTime;
     startBackgroundThread();
     updateActiveModel();
 
@@ -721,7 +750,6 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
   @Override
   public void onRequestPermissionsResult(
           int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -747,7 +775,6 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
   private boolean allPermissionsGranted() {
     for (String permission : getRequiredPermissions()) {
       if (getActivity().checkPermission(permission, Process.myPid(), Process.myUid())
@@ -757,8 +784,6 @@ public class Camera2BasicFragment extends Fragment
     }
     return true;
   }
-
-
 
 
   /**
@@ -850,9 +875,6 @@ public class Camera2BasicFragment extends Fragment
                         maxPreviewHeight,
                         largest);
 
-
-
-
         // We fit the aspect ratio of TextureView to the size of preview we picked.
 //        Log.i(TAG, Arrays.toString(map.getOutputSizes(SurfaceTexture.class)));
 //         previewSize =  map.getOutputSizes(SurfaceTexture.class)[15];
@@ -881,7 +903,9 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-  /** Opens the camera specified by {@link Camera2BasicFragment#cameraId}. */
+  /**
+   * Opens the camera specified by {@link Camera2BasicFragment#cameraId}.
+   */
   private void openCamera(int width, int height) {
     if (!checkedPermissions && !allPermissionsGranted()) {
       FragmentCompat.requestPermissions(this, getRequiredPermissions(), PERMISSIONS_REQUEST_CODE);
@@ -891,33 +915,29 @@ public class Camera2BasicFragment extends Fragment
     }
     setUpCameraOutputs(width, height);
     configureTransform(width, height);
-    textureView.post(new Runnable() {
-                       @Override
-                       public void run() {
-                         /*
-                          * Carry out the camera opening in a background thread so it does not cause lag
-                          * to any potential running animation.
-                          */
-                         backgroundHandler.post(new Runnable() {
-                           @Override
-                           public void run() {
-                             Activity activity = getActivity();
-                             CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
-                             try {
-                               if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
-                                 throw new RuntimeException("Time out waiting to lock camera opening.");
-                               }
-                               manager.openCamera(cameraId, stateCallback, backgroundHandler);
-                             } catch (CameraAccessException e) {
-                               e.printStackTrace();
-                             } catch (InterruptedException e) {
-                               throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
-                             }
-                           }
-                         });
-                       }
-                     }
-    );
+    textureView.post(() -> {
+      /*
+       * Carry out the camera opening in a background thread so it does not cause lag
+       * to any potential running animation.
+       */
+      backgroundHandler.post(new Runnable() {
+        @Override
+        public void run() {
+          Activity activity = getActivity();
+          CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+          try {
+            if (!cameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
+              throw new RuntimeException("Time out waiting to lock camera opening.");
+            }
+            manager.openCamera(cameraId, stateCallback, backgroundHandler);
+          } catch (CameraAccessException e) {
+            e.printStackTrace();
+          } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
+          }
+        }
+      });
+    });
 
   }
 
@@ -929,7 +949,9 @@ public class Camera2BasicFragment extends Fragment
     super.onDestroy();
   }
 
-  /** Closes the current {@link CameraDevice}. */
+  /**
+   * Closes the current {@link CameraDevice}.
+   */
   private void closeCamera() {
     try {
       cameraOpenCloseLock.acquire();
@@ -952,7 +974,9 @@ public class Camera2BasicFragment extends Fragment
     }
   }
 
-  /** Starts a background thread and its {@link Handler}. */
+  /**
+   * Starts a background thread and its {@link Handler}.
+   */
   private void startBackgroundThread() {
     backgroundThread = new HandlerThread(HANDLE_THREAD_NAME);
     backgroundThread.start();
@@ -965,7 +989,9 @@ public class Camera2BasicFragment extends Fragment
 //    updateActiveModel();
   }
 
-  /** Stops the background thread and its {@link Handler}. */
+  /**
+   * Stops the background thread and its {@link Handler}.
+   */
   private void stopBackgroundThread() {
     backgroundThread.quitSafely();
     try {
@@ -980,33 +1006,29 @@ public class Camera2BasicFragment extends Fragment
     }
   }
 
-  /** Takes photos and classify them periodically. */
+  /**
+   * Takes photos and classify them periodically.
+   */
   private Runnable periodicClassify =
-          new Runnable() {
-            @Override
-            public void run() {
-              synchronized (lock) {
-                if (runClassifier) {
+          () -> {
+            synchronized (lock) {
+              if (runClassifier) {
 //                  long startTime = SystemClock.uptimeMillis();
-                  classifyFrame();
+                classifyFrame();
 //                  long endTime = SystemClock.uptimeMillis();
-                  runClassifier = false;
+                runClassifier = false;
 //                  Log.d(TAG, "Timecost to run classification: " + (endTime - startTime));
-                }
               }
-              //   backgroundHandler.post(periodicClassify);
             }
+            //   backgroundHandler.post(periodicClassify);
           };
 
 
-
-
-
-
-
-
-  /** Creates a new {@link CameraCaptureSession} for camera preview. */
+  /**
+   * Creates a new {@link CameraCaptureSession} for camera preview.
+   */
   private void createCameraPreviewSession() {
+    Log.d(TAG, "->>>>>>>>>>>>>>>>> createCameraPreviewSession called");
     try {
       texture = textureView.getSurfaceTexture();
       assert texture != null;
@@ -1026,16 +1048,14 @@ public class Camera2BasicFragment extends Fragment
       CameraCharacteristics characteristics
               = manager.getCameraCharacteristics(cameraId);
 
-      fps = characteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES);
-      Log.i("FPS", "SYNC_MAX_LATENCY_PER_FRAME_CONTROL: " + Arrays.toString(fps));
       FPS = new Range[16];
-      for(int i=0;i<=15;i++){
-        FPS[i] = Range.create(15+i,15+i);
+      for (int i = 0; i <= 15; i++) {
+        FPS[i] = Range.create(15 + i, 15 + i);
       }
 
       // Here, we create a CameraCaptureSession for camera preview.
       cameraDevice.createCaptureSession(
-              Arrays.asList(surface,imageReader.getSurface()),
+              Arrays.asList(surface, imageReader.getSurface()),
               new CameraCaptureSession.StateCallback() {
 
                 @Override
@@ -1118,6 +1138,7 @@ public class Camera2BasicFragment extends Fragment
    * Lock the focus as the first step for a still image capture.
    */
   private void lockFocus() {
+    Log.d(TAG, "->>>>>>>>>>>>>>>>>>> lockFocus called");
     try {
       // This is how to tell the camera to lock focus.
       previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -1137,6 +1158,7 @@ public class Camera2BasicFragment extends Fragment
    * we get a response in {@link #captureCallback} from {@link #lockFocus()}.
    */
   private void runPrecaptureSequence() {
+    Log.d(TAG, "->>>>>>>>>>>>>>>>>>> runPrecaptureSequence called");
     try {
       // This is how to tell the camera to trigger.
       previewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
@@ -1153,7 +1175,7 @@ public class Camera2BasicFragment extends Fragment
   /**
    * Capture a still picture. This method should be called when we get a response in
    * {@link #captureCallback} from both {@link #lockFocus()}.
-   *      */
+   */
 
   private void captureStillPicture() {
     try {
@@ -1180,9 +1202,9 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session,
-                                       @NonNull CaptureRequest request,
-                                       @NonNull TotalCaptureResult result) {
-          showToast("Saved" );
+                @NonNull CaptureRequest request,
+                @NonNull TotalCaptureResult result) {
+          showToast("Saved");
 //          Log.d(TAG, pictureFile.toString());
           unlockFocus();
         }
@@ -1211,12 +1233,12 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
   /**
    * Unlock the focus. This method should be called when still image capture sequence is
    * finished.
    */
   private void unlockFocus() {
+    Log.d(TAG, "->>>>>>>>>>>>>>>>>>> unlockFocus called");
     try {
       // Reset the auto-focus trigger
       previewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -1234,7 +1256,6 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
   private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
     if (mFlashSupported) {
       requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
@@ -1243,10 +1264,12 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-
-
-  /** Classifies a frame from the preview stream. */
+  /**
+   * Classifies a frame from the preview stream.
+   */
   private void classifyFrame() {
+    boolean phoneState = mPhoneStable;
+    long startTime = System.currentTimeMillis();
     if (classifier == null || getActivity() == null || cameraDevice == null) {
       // It's important to not call showToast every frame, or else the app will starve and
       // hang. updateActiveModel() already puts an error message up with showToast.
@@ -1256,41 +1279,43 @@ public class Camera2BasicFragment extends Fragment
     SpannableStringBuilder textToShow = new SpannableStringBuilder();
     Bitmap bitmap = textureView.getBitmap(classifier.getImageSizeX(), classifier.getImageSizeY());
     classifier.classifyFrame(bitmap, textToShow);
+    long endTime = System.currentTimeMillis();
+    Log.d(TAG, "time for classifyFrame = " + (endTime - startTime));
     bitmap.recycle();
     String classifyResult = textToShow.toString();
 
 //    saveFile("classifyResult:  "+textToShow.toString(),filename);
     stringBuilder.append(classifyResult);
-    if(classifyResult.contains("animal")||classifyResult.contains("manyperson")||classifyResult.contains("oneperson")){
-      setFps(30);
-      lastFps = 30;
+    if (classifyResult.contains("animal") || classifyResult.contains("manyperson") || classifyResult.contains(
+            "oneperson")) {
+      xFps = 30;
+      setFps(xFps);
 
-    }else{
-      setFps(25);
-      lastFps = 25;
+    } else {
+      // 在手机 stable 状态下再调
+      if (mPhoneStable) {
+        xFps = 20;
+        setFps(xFps);
+      }
     }
-    xFps = lastFps;
-
-    t2.setText("fps"+lastFps);
 //    Log.d(TAG, "------------>>>>>>>>>> - classifyFrame current thread is = " + Thread.currentThread() + ", is Main = "
 //            + (Looper.myLooper() == Looper.getMainLooper()));
     getActivity().runOnUiThread(() -> {
       Log.d(TAG, "------------>>>>>>>>>> - is Main = "
               + (Looper.myLooper() == Looper.getMainLooper()));
-      t2.setText("fps"+lastFps);
+      t2.setText("fps" + lastFps);
     });
   }
 
   @Override
   public void onSensorChanged(SensorEvent event) {
-
-
     if (isChanged && event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
       float X = event.values[0];
       float Y = event.values[1];
       float Z = event.values[2];
+      Z = Z * 0.3f;
       double i = Math.sqrt(X * X + Y * Y + Z * Z);
-      Log.d(TAG, "========>>>>>>>>>>>>>>>>>>>>   i = " + i);
+      Log.d(TAG, String.format("----------->>>>>>>>>>>>> i = %f, (x, y, z) = (%f, %f, %f)", i, X, Y, Z));
       if (i > max) {
         max = i;
       }
@@ -1300,111 +1325,94 @@ public class Camera2BasicFragment extends Fragment
       currentTime = System.currentTimeMillis();
       if (!firstIn || currentTime - lastTime > 500) {
 //        long startTime1=System.currentTimeMillis();   //获取开始时间
-        if (phonestable == false) {//手机处于运动状态时进行的处理。
+        if (!mPhoneStable) {//手机处于运动状态时进行的处理。
           if (currentTime - lastTime > 50) {
             lastTime = currentTime;
-            if (max > 0.5) {
+            if (max > 0.25) {
               xFps = (int) Math.round(30 * (Math.pow(Math.E, -1 * max * a)));//保守和激进时可以改变a的值
               if (xFps != lastFps) {
-//              setFps(xFps);
                 if (xFps < 15) {
                   xFps = 15;
                 }
-                previewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, FPS[xFps - 15]);
-                try {
-                  // Finally, we start displaying the camera preview.
-                  previewRequest = previewRequestBuilder.build();
-                  captureSession.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler);
-                } catch (CameraAccessException e) {
-                  Log.e(TAG, "Failed to set up config to capture Camera", e);
-                }
+                setFps(xFps);
                 lastFps = xFps;
-                t2.setText("fps" + lastFps);
               }
               totalCnt += 1;
               stablecnt = 0;
-              stringBuilder.append( totalCnt + "  fps  " + xFps +  "  I  " + df.format(max) +" "+stablecnt+'\n');
+              stringBuilder.append(
+                      totalCnt + "  fps  " + xFps + "  I  " + df.format(max) + " " + stablecnt + '\n');
               max = 0;
             } else {
               stablecnt += 1;
-              if (stablecnt == 10) {                //稳定超过0.5秒进行一次判断，并根据结果调整预览界面的帧率，且只有stablecnt为10的时候才执行一次类型识别
+              // 稳定超过0.5秒进行一次判断，并根据结果调整预览界面的帧率，
+              // 且只有stablecnt为2的时候才执行一次类型识别
+              if (stablecnt == 10) {
                 synchronized (lock) {
                   runClassifier = true;
                 }
                 backgroundHandler.post(periodicClassify);
-                phonestable = true;
+                mPhoneStable = true;
               }
               totalCnt += 1;
-              stringBuilder.append( totalCnt + "  fps  " + xFps +  "  I  " + df.format(max) +" "+stablecnt+'\n');
+              stringBuilder.append(
+                      totalCnt + "  fps  " + xFps + "  I  " + df.format(max) + " " + stablecnt + '\n');
               max = 0;
             }
           }
-        }
-        else {
-          if (i >0.5) {//当手机处于静止状态时，为保证用户体验，只要某个瞬间I值大于某个界限值立即认定为此时手机已经处于运动，并调整帧率大小
+        } else {
+          if (i > 0.25) {//当手机处于静止状态时，为保证用户体验，只要某个瞬间I值大于某个界限值立即认定为此时手机已经处于运动，并调整帧率大小
             lastTime = currentTime;
             xFps = (int) Math.round(30 * (Math.pow(Math.E, -1 * i * a)));//保守和激进时可以改变0.08的值
             if (xFps != lastFps) {
-//              setFps(xFps);
               if (xFps < 15) {
                 xFps = 15;
               }
-              previewRequestBuilder.set(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, FPS[xFps - 15]);
-              try {
-                // Finally, we start displaying the camera preview.
-                previewRequest = previewRequestBuilder.build();
-                captureSession.setRepeatingRequest(previewRequest, captureCallback, backgroundHandler);
-              } catch (CameraAccessException e) {
-                Log.e(TAG, "Failed to set up config to capture Camera", e);
-              }
-              lastFps = xFps;
-              t2.setText("fps"+lastFps);
+              setFps(xFps);
             }
             stablecnt = 0;
-            phonestable = false;
+            mPhoneStable = false;
             totalCnt += 1;
-            stringBuilder.append( totalCnt + "  fps  " + xFps +  "  I  " + df.format(max) +" "+stablecnt+'\n');
+            stringBuilder.append(
+                    totalCnt + "  fps  " + xFps + "  I  " + df.format(max) + " " + stablecnt + '\n');
             max = 0;
           }
           if (currentTime - lastTime > 50) {
             lastTime = currentTime;
             totalCnt += 1;
             stablecnt += 1;
-            stringBuilder.append( totalCnt + "  fps  " + xFps +  "  I  " + df.format(max) +" "+stablecnt+'\n');
+            stringBuilder.append(
+                    totalCnt + "  fps  " + xFps + "  I  " + df.format(max) + " " + stablecnt + '\n');
             max = 0;
           }
         }
 
-      }
-      firstIn = false;
-      if (isHold&&currentTime - lastTime2 > 1000) {
-        lastTime2 = currentTime;
-        brightCnt++;
-        int deltaL = (int) (b * max2 * x_luminance);
-        int temp_luminance = x_luminance - deltaL;
-        if (temp_luminance > min_brightness) {
-          x_luminance = temp_luminance;
+        if (isHold && totalCnt % 20 == 0) {
+          int deltaL = (int) (b * max2 * x_luminance);
+          int temp_luminance = x_luminance - deltaL;
+          if (temp_luminance > min_brightness) {
+            x_luminance = temp_luminance;
 //              setBrightness(getActivity(), x_luminance);
 //          WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
 //          lp.screenBrightness = (float) x_luminance * (1f / 255f);
 //          getActivity().getWindow().setAttributes(lp);
-        } else {
+          } else {
 //              setBrightness(getActivity(), min_brightness);
 //          WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
 //          lp.screenBrightness = (float) min_brightness * (1f / 255f);
 //          getActivity().getWindow().setAttributes(lp);
-          isHold = false;
-          x_luminance = min_brightness;
+            isHold = false;
+            x_luminance = min_brightness;
+          }
+
+          stringBuilderBright.append(
+                  totalCnt + "  bright  " + x_luminance + "  I  " + df.format(max2) + '\n');
+          max2 = 0;
         }
-
-
-        stringBuilderBright.append( brightCnt + "  bright  " + x_luminance + "  I  " + df.format(max2)+'\n');
-        max2 = 0;
-
         Log.d(TAG, "--------------------- > xFps = " + xFps);
 
       }
-
+      firstIn = false;
+      t2.setText("fps" + lastFps);
     }
   }
 
@@ -1455,7 +1463,9 @@ public class Camera2BasicFragment extends Fragment
 
   }
 
-  /** Compares two {@code Size}s based on their areas. */
+  /**
+   * Compares two {@code Size}s based on their areas.
+   */
   private static class CompareSizesByArea implements Comparator<Size> {
 
     @Override
@@ -1466,7 +1476,9 @@ public class Camera2BasicFragment extends Fragment
     }
   }
 
-  /** Shows an error message dialog. */
+  /**
+   * Shows an error message dialog.
+   */
   public static class ErrorDialog extends DialogFragment {
 
     private static final String ARG_MESSAGE = "message";
@@ -1496,14 +1508,14 @@ public class Camera2BasicFragment extends Fragment
     }
   }
 
-  public void setFps(int ps){
+  public void setFps(int ps) {
 
     // Auto focus should be continuous for camera preview.
     //手机非静止，帧率相对较低
 
-    if(ps<15){
+    if (ps < 15) {
       ps = 15;
-    }else if(ps>30){
+    } else if (ps > 30) {
       ps = 30;
     }
     switch (ps) {
@@ -1569,9 +1581,9 @@ public class Camera2BasicFragment extends Fragment
       Log.e(TAG, "Failed to set up config to capture Camera", e);
     }
 
-
-
+    lastFps = ps;
   }
+
   public static void addTxtToFileBuffered(File file, String content) {
     //在文本文本中追加内容
     BufferedWriter out = null;
@@ -1584,7 +1596,7 @@ public class Camera2BasicFragment extends Fragment
       e.printStackTrace();
     } finally {
       try {
-        if(out != null){
+        if (out != null) {
           out.close();
         }
       } catch (IOException e) {
@@ -1594,14 +1606,16 @@ public class Camera2BasicFragment extends Fragment
   }
 
 
-  public static void saveFile(String str,String name,int filename) {
+  public static void saveFile(String str, String name, int filename) {
     String filePath = null;
     boolean hasSDCard = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     if (hasSDCard) { // SD卡根目录的hello.text
-      filePath = Environment.getExternalStorageDirectory().toString() + File.separator + name +filename+".txt";
+      filePath = Environment.getExternalStorageDirectory().toString() + File.separator + name + filename + ".txt";
 //      Log.i("加速度计存储位置", "" + filePath);
     } else  // 系统下载缓存根目录的hello.text
-      filePath = Environment.getDownloadCacheDirectory().toString() + File.separator + name+filename+".txt";
+    {
+      filePath = Environment.getDownloadCacheDirectory().toString() + File.separator + name + filename + ".txt";
+    }
 
     try {
       File file = new File(filePath);
@@ -1629,6 +1643,7 @@ public class Camera2BasicFragment extends Fragment
     }
     return nowBrightnessValue;
   }
+
   /**
    * 设置当前Activity显示时的亮度
    * 屏幕亮度最大数值一般为255，各款手机有所不同
@@ -1639,8 +1654,6 @@ public class Camera2BasicFragment extends Fragment
     lp.screenBrightness = Float.valueOf(brightness) * (1f / 255f);
     activity.getWindow().setAttributes(lp);
   }
-
-
 
 
 }
