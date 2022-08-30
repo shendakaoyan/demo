@@ -15,6 +15,8 @@ limitations under the License.
 
 package com.example.android.tflitecamerademo;
 
+import static android.os.Process.THREAD_PRIORITY_URGENT_AUDIO;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -433,6 +435,13 @@ public class Camera2BasicFragment extends Fragment
 //              String str=sdf.format(new Date());
 //              Log.e(TAG, "time:"+str);
             }
+
+            @Override
+            public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
+              super.onCaptureStarted(session, request, timestamp, frameNumber);
+              Log.d(TAG, "onCaptureStarted: frameNumber = " + frameNumber + " time = " + timestamp);
+            }
+
           };
 
   /**
@@ -978,7 +987,7 @@ public class Camera2BasicFragment extends Fragment
    * Starts a background thread and its {@link Handler}.
    */
   private void startBackgroundThread() {
-    backgroundThread = new HandlerThread(HANDLE_THREAD_NAME);
+    backgroundThread = new HandlerThread(HANDLE_THREAD_NAME, THREAD_PRIORITY_URGENT_AUDIO);
     backgroundThread.start();
     backgroundHandler = new Handler(backgroundThread.getLooper());
     // Start the classification train & load an initial model.
@@ -1294,7 +1303,7 @@ public class Camera2BasicFragment extends Fragment
     } else {
       // 在手机 stable 状态下再调
       if (mPhoneStable) {
-        xFps = 20;
+        xFps = 10;
         setFps(xFps);
       }
     }
@@ -1422,7 +1431,7 @@ public class Camera2BasicFragment extends Fragment
 
   }
 
-  private static class ImageSaver implements Runnable {
+  public static class ImageSaver implements Runnable {
 
     /**
      * The JPEG image
@@ -1433,7 +1442,7 @@ public class Camera2BasicFragment extends Fragment
      */
     private final File mFile;
 
-    ImageSaver(Image image, File file) {
+    public ImageSaver(Image image, File file) {
       mImage = image;
       mFile = file;
     }
@@ -1460,13 +1469,12 @@ public class Camera2BasicFragment extends Fragment
         }
       }
     }
-
   }
 
   /**
    * Compares two {@code Size}s based on their areas.
    */
-  private static class CompareSizesByArea implements Comparator<Size> {
+  public static class CompareSizesByArea implements Comparator<Size> {
 
     @Override
     public int compare(Size lhs, Size rhs) {
@@ -1573,10 +1581,18 @@ public class Camera2BasicFragment extends Fragment
     }
     try {
 
+      captureSession.abortCaptures();
       // Finally, we start displaying the camera preview.
       previewRequest = previewRequestBuilder.build();
-      captureSession.setRepeatingRequest(
-              previewRequest, captureCallback, backgroundHandler);
+
+      backgroundHandler.postDelayed(() -> {
+        try {
+          captureSession.setRepeatingRequest(
+                  previewRequest, captureCallback, backgroundHandler);
+        } catch (CameraAccessException e) {
+          e.printStackTrace();
+        }
+      }, 10);
     } catch (CameraAccessException e) {
       Log.e(TAG, "Failed to set up config to capture Camera", e);
     }

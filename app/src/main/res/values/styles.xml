@@ -20,4 +20,12 @@
 
 </style>
 
+    <style name="AppCompat.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/control_background</item>
+        <item name="colorPrimaryDark">@color/item_normal</item>
+        <item name="colorAccent">@color/selection_focus</item>
+
+    </style>
+
 </resources>
